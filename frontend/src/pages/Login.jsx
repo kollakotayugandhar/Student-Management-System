@@ -19,13 +19,20 @@ const handleLogin = async (e) => {
 
         setLoading(true);
 
-        const res = await api.post("/users/login", {
+        console.log("Attempting login with email:", email);
+        console.log("API Base URL:", api.defaults.baseURL);
+
+        const res = await api.post("/auth/login", {
             email,
             password
         });
         
+        console.log("Login Response:", res);
+        console.log("Response Data:", res.data);
 
-        console.log(res.data);
+        if (!res.data || !res.data.token) {
+            throw new Error("No token received from server");
+        }
 
         localStorage.setItem("token", res.data.token);
 
@@ -40,12 +47,17 @@ const handleLogin = async (e) => {
 
     } catch (error) {
 
-        console.log(error);
+        console.error("Login Error:", error);
+        console.error("Error Status:", error.response?.status);
+        console.error("Error Data:", error.response?.data);
+        console.error("Error Message:", error.message);
 
-        alert(
-            error.response?.data?.message ||
-            "Login Failed"
-        );
+        const errorMessage = 
+            error.response?.data?.message || 
+            error.message || 
+            "Login Failed - Please check your email and password";
+
+        alert(errorMessage);
 
     } finally {
 

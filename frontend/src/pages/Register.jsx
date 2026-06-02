@@ -17,7 +17,10 @@ function Register() {
         e.preventDefault();
 
         try {
-            await api.post("/users/register", {
+            console.log("Attempting registration with:", { name, email, role });
+            console.log("API Base URL:", api.defaults.baseURL);
+
+            const res = await api.post("/auth/register", {
                 name,
                 email,
                 password,
@@ -25,12 +28,24 @@ function Register() {
                 adminCode
             });
 
+            console.log("Registration Response:", res);
+            console.log("Response Data:", res.data);
+
             alert("Registration Successful");
             navigate("/login");
 
         } catch (error) {
-            console.log(error);
-            alert(error.response?.data?.message || "Register Failed");
+            console.error("Registration Error:", error);
+            console.error("Error Status:", error.response?.status);
+            console.error("Error Data:", error.response?.data);
+            console.error("Error Message:", error.message);
+
+            const errorMessage = 
+                error.response?.data?.message || 
+                error.message || 
+                "Registration Failed";
+
+            alert(errorMessage);
         }
     };
 
