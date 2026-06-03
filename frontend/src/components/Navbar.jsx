@@ -41,14 +41,16 @@ export default function Navbar() {
         : "U";
 
     return (
-        <nav className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl shadow-2xl shadow-slate-950/30">
-            <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-6 py-4 lg:px-8">
+        <nav className="relative sticky top-0 z-50 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl shadow-2xl shadow-slate-950/50 overflow-hidden">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.12),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.1),transparent_26%)]" />
+            <div className="relative mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-6 py-4 lg:px-8">
 
                 <Link
                     to="/"
                     className="flex items-center gap-3 rounded-3xl border border-cyan-500/10 bg-gradient-to-r from-cyan-500/10 via-slate-900/80 to-sky-500/10 px-4 py-3 text-cyan-100 shadow-lg shadow-cyan-500/5 transition duration-300 hover:scale-[1.01] hover:border-cyan-400/20"
                 >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-gradient-to-br from-cyan-400 to-sky-500 text-lg font-bold text-slate-950 shadow-inner shadow-cyan-500/20">
+                    <div className="relative flex h-12 w-12 items-center justify-center rounded-3xl bg-gradient-to-br from-cyan-400 to-sky-500 text-lg font-bold text-slate-950 shadow-inner shadow-cyan-500/20 animate-float">
+                        <span className="absolute -top-2 -right-2 h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(56,189,248,0.7)] animate-blink" />
                         SMS
                     </div>
                     <div>
@@ -85,8 +87,8 @@ export default function Navbar() {
                         </Link>
                     </div>
 
-                    <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-slate-300 shadow-inner shadow-slate-950/10">
-                        <svg className="h-4 w-4 text-cyan-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-slate-300 shadow-inner shadow-slate-950/10 transition duration-300 hover:bg-slate-900/80">
+                        <svg className="h-4 w-4 text-cyan-300 transition duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="11" cy="11" r="8" />
                             <path d="M21 21l-4.35-4.35" />
                         </svg>
@@ -105,11 +107,11 @@ export default function Navbar() {
                         aria-label="Toggle menu"
                     >
                         {mobileOpen ? (
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 animate-slow-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         ) : (
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 animate-slow-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         )}
@@ -120,7 +122,7 @@ export default function Navbar() {
                             onClick={() => setDropdownOpen((s) => !s)}
                             className="flex items-center gap-3 rounded-full border border-cyan-500/30 bg-gradient-to-r from-slate-900/80 to-slate-800/80 px-3 py-2 text-white shadow-lg shadow-cyan-500/10 transition hover:bg-cyan-500/10"
                         >
-                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-500 to-sky-500 flex items-center justify-center text-sm font-bold text-slate-950 shadow-inner shadow-cyan-500/30">
+                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-500 to-sky-500 flex items-center justify-center text-sm font-bold text-slate-950 shadow-inner shadow-cyan-500/30 animate-float">
                                 {initials}
                             </div>
                             <div className="hidden sm:block text-left">

@@ -146,12 +146,20 @@ function Home() {
     );
 
     return (
-        <div className="min-h-screen bg-slate-950 text-white px-6 py-10">
+        <div className="relative min-h-screen bg-slate-950 text-white px-6 py-10 overflow-hidden">
+            <div className="pointer-events-none absolute inset-0 -z-10">
+                <div className="absolute left-1/4 top-8 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl" />
+                <div className="absolute right-10 top-28 h-72 w-72 rounded-full bg-violet-500/10 blur-3xl" />
+                <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent" />
+            </div>
             <div className="mx-auto max-w-7xl space-y-8">
                 <section className="rounded-3xl border border-cyan-500/20 bg-slate-900/80 p-8 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
                     <div className="grid gap-8 lg:grid-cols-[1.5fr_0.9fr] lg:items-center">
                         <div>
-                            <p className="text-sm uppercase tracking-[0.35em] text-cyan-300/80">Welcome back</p>
+                            <p className="flex items-center gap-2 text-sm uppercase tracking-[0.35em] text-cyan-300/80">
+                                Welcome back
+                                <span className="inline-flex h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(56,189,248,0.55)] animate-blink" />
+                            </p>
                             <h1 className="mt-3 text-5xl font-bold text-white">Powerful campus management made simple</h1>
                             <p className="mt-5 max-w-2xl text-slate-300 text-lg">
                                 Access every tool from admissions and attendance to fees, events, placements, and AI support — all from one intelligent dashboard.
@@ -159,24 +167,26 @@ function Home() {
                             <div className="mt-8 flex flex-wrap gap-3">
                                 <button
                                     onClick={() => navigate("/add-student")}
-                                    className="inline-flex items-center gap-2 rounded-3xl bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+                                    className="inline-flex items-center gap-2 rounded-3xl bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 transition duration-500 hover:-translate-y-0.5 hover:bg-cyan-400"
                                 >
-                                    <FaUserPlus /> Add Student
+                                    <FaUserPlus className="transition duration-500 hover:scale-110" /> Add Student
                                 </button>
                                 <button
                                     onClick={() => navigate("/ai-assistant")}
-                                    className="inline-flex items-center gap-2 rounded-3xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                                    className="inline-flex items-center gap-2 rounded-3xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition duration-500 hover:-translate-y-0.5 hover:bg-white/10"
                                 >
-                                    <FaRobot /> AI Assistant
+                                    <FaRobot className="transition duration-500 hover:scale-110" /> AI Assistant
                                 </button>
                             </div>
                         </div>
                         <div className="grid gap-4 sm:grid-cols-2">
                             {stats.map((stat) => (
-                                <div key={stat.label} className="rounded-3xl border border-white/10 bg-slate-950/90 p-6 shadow-xl shadow-slate-950/20">
+                                <div key={stat.label} className="group rounded-3xl border border-white/10 bg-slate-950/90 p-6 shadow-xl shadow-slate-950/20 transition duration-500 hover:-translate-y-1 hover:border-cyan-500/30">
                                     <div className="flex items-center justify-between gap-4">
                                         <div className="text-sm uppercase tracking-[0.3em] text-slate-400">{stat.label}</div>
-                                        <div className="rounded-2xl bg-slate-800/80 p-3">{stat.icon}</div>
+                                        <div className="rounded-2xl bg-slate-800/80 p-3 transition duration-500 group-hover:-translate-y-1 group-hover:scale-110">
+                                            {stat.icon}
+                                        </div>
                                     </div>
                                     <p className="mt-6 text-4xl font-bold text-white">{stat.value}</p>
                                 </div>
@@ -205,8 +215,9 @@ function Home() {
 
                         <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                             {filteredModules.map((module) => (
-                                <div key={module.title} className="group rounded-3xl border border-white/10 bg-slate-950/80 p-5 transition hover:-translate-y-1 hover:border-cyan-500/30">
-                                    <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-900 text-cyan-300 shadow-lg shadow-cyan-500/10">
+                                <div key={module.title} className="group rounded-3xl border border-white/10 bg-slate-950/80 p-5 transition duration-500 hover:-translate-y-1 hover:border-cyan-500/30">
+                                    <div className="relative flex h-16 w-16 items-center justify-center rounded-3xl bg-slate-900 text-cyan-300 shadow-lg shadow-cyan-500/10 transition duration-500 group-hover:-translate-y-1 group-hover:scale-110">
+                                        <span className="absolute -top-2 -right-2 h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-[0_0_10px_rgba(56,189,248,0.65)] animate-blink" />
                                         {module.icon}
                                     </div>
                                     <h3 className="mt-5 text-xl font-semibold text-white">{module.title}</h3>
@@ -235,9 +246,11 @@ function Home() {
                             </div>
                             <div className="mt-6 space-y-4">
                                 {announcements.map((item) => (
-                                    <div key={item.title} className="rounded-3xl border border-white/10 bg-slate-950/80 p-4">
+                                    <div key={item.title} className="group rounded-3xl border border-white/10 bg-slate-950/80 p-4 transition duration-500 hover:-translate-y-1 hover:border-cyan-500/30">
                                         <div className="flex items-center gap-3">
-                                            <div className="rounded-2xl bg-slate-800 p-3">{item.icon}</div>
+                                            <div className="rounded-2xl bg-slate-800 p-3 transition duration-500 group-hover:scale-105 animate-float">
+                                                {item.icon}
+                                            </div>
                                             <div>
                                                 <p className="font-semibold text-white">{item.title}</p>
                                                 <p className="mt-1 text-sm text-slate-400">{item.category}</p>

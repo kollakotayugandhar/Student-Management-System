@@ -11,6 +11,11 @@ const registerUser = async (req, res) => {
 
         const { name, email, password, role, adminCode } = req.body;
 
+        // Validate required fields
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: "Name, email, and password are required" });
+        }
+
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
@@ -42,15 +47,21 @@ const registerUser = async (req, res) => {
         );
 
         const tokenPreview = token ? `${token.slice(0, 10)}...` : null;
-        console.log("Issued token preview (userController register):", tokenPreview);
+        console.log("Registration successful for user:", user.email, "Token preview:", tokenPreview);
 
         res.status(201).json({
-            user,
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            },
             token
         });
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("Registration error:", error.message);
+        res.status(500).json({ message: "Server error: " + error.message });
     }
 };
 
@@ -100,15 +111,21 @@ const loginUser = async (req, res) => {
         );
 
         const tokenPreview2 = token ? `${token.slice(0, 10)}...` : null;
-        console.log("Issued token preview (userController login):", tokenPreview2);
+        console.log("Login successful for user:", user.email, "Token preview:", tokenPreview2);
 
         res.json({
-            user,
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            },
             token
         });
 
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("Login error:", error.message);
+        res.status(500).json({ message: "Server error: " + error.message });
     }
 };
 

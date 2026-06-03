@@ -1,6 +1,47 @@
 
 @import "tailwindcss";
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes slow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes blink-light {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-slow-spin {
+  animation: slow-spin 10s linear infinite;
+}
+
+.animate-blink {
+  animation: blink-light 1.6s ease-in-out infinite;
+}
+
 body{
     margin:0;
     padding:0;
