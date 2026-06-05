@@ -7,9 +7,17 @@ const [studentName, setStudentName] = useState("");
 const [marks, setMarks] = useState("");
 
 const [results, setResults] = useState([]);
+    const [user, setUser] = useState(null);
+    const isAdmin = user?.role === "admin";
 
 useEffect(() => {
     fetchResults();
+    try {
+        const raw = localStorage.getItem("user");
+        setUser(raw ? JSON.parse(raw) : null);
+    } catch {
+        setUser(null);
+    }
 }, []);
 
 const fetchResults = async () => {
@@ -48,25 +56,23 @@ const submitResult = async (e) => {
         grade = "F";
     }
 
-    try {
+        try {
+            await api.post("/results", {
+                studentName,
+                marks: Number(marks),
+                grade
+            });
 
-        await api.post("/results", {
-            studentName,
-            marks: Number(marks),
-            grade
-            }
-        );
+            setStudentName("");
+            setMarks("");
 
-        setStudentName("");
-        setMarks("");
+            fetchResults();
 
-        fetchResults();
+        } catch (error) {
 
-    } catch (error) {
+            console.log(error);
 
-        console.log(error);
-
-    }
+        }
 
 };
 
@@ -78,41 +84,48 @@ return (
             Results Management
         </h1>
 
-        <form
-            onSubmit={submitResult}
-            className="space-y-4 mb-10 bg-white/10 p-6 rounded-xl"
-        >
-
-            <input
-                type="text"
-                placeholder="Student Name"
-                value={studentName}
-                onChange={(e) =>
-                    setStudentName(e.target.value)
-                }
-                className="w-full p-3 rounded bg-slate-900"
-                required
-            />
-
-            <input
-                type="number"
-                placeholder="Marks"
-                value={marks}
-                onChange={(e) =>
-                    setMarks(e.target.value)
-                }
-                className="w-full p-3 rounded bg-slate-900"
-                required
-            />
-
-            <button
-                type="submit"
-                className="bg-cyan-500 px-6 py-3 rounded hover:bg-cyan-600"
+        {isAdmin ? (
+            <form
+                onSubmit={submitResult}
+                className="space-y-4 mb-10 bg-white/10 p-6 rounded-xl"
             >
-                Save Result
-            </button>
 
-        </form>
+                <input
+                    type="text"
+                    placeholder="Student Name"
+                    value={studentName}
+                    onChange={(e) =>
+                        setStudentName(e.target.value)
+                    }
+                    className="w-full p-3 rounded bg-slate-900"
+                    required
+                />
+
+                <input
+                    type="number"
+                    placeholder="Marks"
+                    value={marks}
+                    onChange={(e) =>
+                        setMarks(e.target.value)
+                    }
+                    className="w-full p-3 rounded bg-slate-900"
+                    required
+                />
+
+                <button
+                    type="submit"
+                    className="bg-cyan-500 px-6 py-3 rounded hover:bg-cyan-600"
+                >
+                    Save Result
+                </button>
+
+            </form>
+        ) : (
+            <div className="space-y-4 mb-10 bg-white/5 p-6 rounded-xl text-slate-300">
+                <p className="font-semibold">Student view</p>
+                <p>Results are visible below; adding results is restricted to admins.</p>
+            </div>
+        )}
 
         <table className="w-full bg-white/10 rounded-xl overflow-hidden">
 
@@ -138,7 +151,8 @@ return (
 
             <tbody>
 
-                {results.map((item) => (
+                {(isAdmin ? results : results.filter(r => user && user.name && r.studentName && r.studentName.toLowerCase().includes(user.name.toLowerCase())))
+                    .map((item) => (
 
                     <tr
                         key={item._id}

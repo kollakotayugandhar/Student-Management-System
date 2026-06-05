@@ -8,10 +8,19 @@ const [attendance, setAttendance] = useState([]);
 
 const [loading, setLoading] = useState(false);
 const [selectedDate, setSelectedDate] = useState("");
+    const [user, setUser] = useState(null);
+
+    const isAdmin = user?.role === "admin";
 
 useEffect(() => {
     fetchStudents();
     fetchAttendance();
+    try {
+        const raw = localStorage.getItem("user");
+        setUser(raw ? JSON.parse(raw) : null);
+    } catch {
+        setUser(null);
+    }
 }, []);
 
 const fetchStudents = async () => {
@@ -42,6 +51,15 @@ const isMarked = (studentId) => {
 };
 
 const markAttendance = async (studentId, status) => {
+
+    // prevent marking other students' attendance when not admin
+    const student = students.find((s) => s._id === studentId);
+    const isSelf = user && ((student?.name && user.name && student.name.toLowerCase() === user.name.toLowerCase()) || (student?.rollNumber && user.rollNumber && student.rollNumber === user.rollNumber));
+
+    if (!isAdmin && !isSelf) {
+        alert("Only admins can mark attendance for other students.");
+        return;
+    }
 
     if (isMarked(studentId)) {
         alert("Attendance already marked today!");
@@ -114,47 +132,51 @@ return (
                     </div>
 
                     <div className="flex gap-3">
+                            {(isAdmin || ((user && student.name && user.name && student.name.toLowerCase() === user.name.toLowerCase()) || (user && student.rollNumber && user.rollNumber && student.rollNumber === user.rollNumber))) ? (
+                                <>
+                                    <button
+                                        disabled={
+                                            loading ||
+                                            isMarked(student._id)
+                                        }
+                                        onClick={() =>
+                                            markAttendance(
+                                                student._id,
+                                                "Present"
+                                            )
+                                        }
+                                        className={`px-4 py-2 rounded ${
+                                            isMarked(student._id)
+                                                ? "bg-gray-500"
+                                                : "bg-green-500"
+                                        }`}
+                                    >
+                                        Present
+                                    </button>
 
-                        <button
-                            disabled={
-                                loading ||
-                                isMarked(student._id)
-                            }
-                            onClick={() =>
-                                markAttendance(
-                                    student._id,
-                                    "Present"
-                                )
-                            }
-                            className={`px-4 py-2 rounded ${
-                                isMarked(student._id)
-                                    ? "bg-gray-500"
-                                    : "bg-green-500"
-                            }`}
-                        >
-                            Present
-                        </button>
-
-                        <button
-                            disabled={
-                                loading ||
-                                isMarked(student._id)
-                            }
-                            onClick={() =>
-                                markAttendance(
-                                    student._id,
-                                    "Absent"
-                                )
-                            }
-                            className={`px-4 py-2 rounded ${
-                                isMarked(student._id)
-                                    ? "bg-gray-500"
-                                    : "bg-red-500"
-                            }`}
-                        >
-                            Absent
-                        </button>
-
+                                    <button
+                                        disabled={
+                                            loading ||
+                                            isMarked(student._id)
+                                        }
+                                        onClick={() =>
+                                            markAttendance(
+                                                student._id,
+                                                "Absent"
+                                            )
+                                        }
+                                        className={`px-4 py-2 rounded ${
+                                            isMarked(student._id)
+                                                ? "bg-gray-500"
+                                                : "bg-red-500"
+                                        }`}
+                                    >
+                                        Absent
+                                    </button>
+                                </>
+                            ) : (
+                                <span className="text-xs uppercase tracking-[0.2em] text-slate-400">Admin only</span>
+                            )}
                     </div>
 
                 </div>

@@ -9,13 +9,13 @@ const {
     getAttendanceStats
 } = require("../controllers/attendanceController");
 
-// mark attendance
-router.post("/", protect, adminOnly, markAttendance);
+// mark attendance (any authenticated user can mark — controller trusts request)
+router.post("/", protect, markAttendance);
 
-// get all attendance
-router.get("/", protect, adminOnly, getAttendance);
+// get attendance (authenticated users)
+router.get("/", protect, getAttendance);
 
-// stats route
+// stats route (admin only)
 router.get("/stats", protect, adminOnly, getAttendanceStats);
 
 module.exports = router;

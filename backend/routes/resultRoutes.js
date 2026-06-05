@@ -9,6 +9,7 @@ const {
 } = require("../controllers/resultController");
 
 router.post("/", protect, adminOnly, createResult);
-router.get("/", protect, adminOnly, getResults);
+// allow authenticated users to view results
+router.get("/", protect, getResults);
 
 module.exports = router;
