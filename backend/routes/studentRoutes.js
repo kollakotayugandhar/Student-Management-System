@@ -19,8 +19,8 @@ router.post("/bulk", protect, adminOnly, bulkCreateStudents);
 router.put("/:id", protect, adminOnly, updateStudent);
 router.delete("/:id", protect, adminOnly, deleteStudent);
 
-// 🔓 ALL LOGGED USERS CAN VIEW
-router.get("/", protect, getStudents);
-router.get("/:id", protect, getSingleStudent);
+// 🔓 ADMIN ONLY CAN VIEW STUDENT RECORDS
+router.get("/", protect, adminOnly, getStudents);
+router.get("/:id", protect, adminOnly, getSingleStudent);
 
 module.exports = router;

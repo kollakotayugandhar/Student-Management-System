@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const protect = require("../middleware/authMiddleware");
+const adminOnly = require("../middleware/adminMiddleware");
 
 const {
     markAttendance,
@@ -8,12 +10,12 @@ const {
 } = require("../controllers/attendanceController");
 
 // mark attendance
-router.post("/", markAttendance);
+router.post("/", protect, adminOnly, markAttendance);
 
 // get all attendance
-router.get("/", getAttendance);
+router.get("/", protect, adminOnly, getAttendance);
 
 // stats route
-router.get("/stats", getAttendanceStats);
+router.get("/stats", protect, adminOnly, getAttendanceStats);
 
 module.exports = router;

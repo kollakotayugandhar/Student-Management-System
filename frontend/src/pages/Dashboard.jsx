@@ -15,7 +15,8 @@ const [resultsCount, setResultsCount] = useState(0);
 
 const navigate = useNavigate();
 
-const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user") || "null");
+const dashboardLabel = user?.role === "admin" ? "Admin Dashboard" : "Student Dashboard";
 
 const logout = () => {
 
@@ -93,7 +94,7 @@ return (
             <div className="mb-10 rounded-[2rem] border border-cyan-500/10 bg-slate-900/80 p-8 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
                     <div>
-                        <p className="text-sm uppercase tracking-[0.35em] text-cyan-400/70">Admin Dashboard</p>
+                        <p className="text-sm uppercase tracking-[0.35em] text-cyan-400/70">{dashboardLabel}</p>
                         <h1 className="mt-4 text-4xl font-bold text-white">Welcome back, {user?.name || "Admin"}</h1>
                         <p className="mt-3 max-w-2xl text-slate-400">Monitor students, attendance, and results from a beautiful, unified dashboard with fast access to the most important actions.</p>
                     </div>

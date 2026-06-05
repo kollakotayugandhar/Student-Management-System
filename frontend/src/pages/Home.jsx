@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -25,25 +25,38 @@ import {
 function Home() {
     const navigate = useNavigate();
     const [search, setSearch] = useState("");
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        try {
+            const raw = localStorage.getItem("user");
+            setUser(raw ? JSON.parse(raw) : null);
+        } catch {
+            setUser(null);
+        }
+    }, []);
 
     const modules = [
         {
             title: "Add Student",
             icon: <FaUserPlus size={30} />,
             path: "/add-student",
-            description: "Register a new student record."
+            description: "Register a new student record.",
+            adminOnly: true
         },
         {
             title: "Fees",
             icon: <FaMoneyBill size={30} />,
             path: "/feesmanagement",
-            description: "Track fees, dues, and payments."
+            description: "Track fees, dues, and payments.",
+            adminOnly: true
         },
         {
             title: "Placement",
             icon: <FaBriefcase size={30} />,
             path: "/placement",
-            description: "View placement drives and offers."
+            description: "View placement drives and offers.",
+            adminOnly: true
         },
         {
             title: "Events",
@@ -61,7 +74,8 @@ function Home() {
             title: "ID Card",
             icon: <FaIdCard size={30} />,
             path: "/id-card",
-            description: "Generate student ID cards."
+            description: "Generate student ID cards.",
+            adminOnly: true
         },
         {
             title: "Timetable",
@@ -85,7 +99,8 @@ function Home() {
             title: "Admin Panel",
             icon: <FaShieldAlt size={30} />,
             path: "/admin-panel",
-            description: "Manage system settings, backups, and admin controls."
+            description: "Manage system settings, backups, and admin controls.",
+            adminOnly: true
         },
         {
             title: "Settings",
@@ -138,11 +153,13 @@ function Home() {
 
     const filteredModules = useMemo(
         () =>
-            modules.filter((module) =>
-                module.title.toLowerCase().includes(search.toLowerCase()) ||
-                module.description.toLowerCase().includes(search.toLowerCase())
-            ),
-        [modules, search]
+            modules
+                .filter((module) => !module.adminOnly || user?.role === "admin")
+                .filter((module) =>
+                    module.title.toLowerCase().includes(search.toLowerCase()) ||
+                    module.description.toLowerCase().includes(search.toLowerCase())
+                ),
+        [modules, search, user]
     );
 
     return (

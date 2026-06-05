@@ -39,6 +39,27 @@ const ProtectedRoute = ({ children }) => {
     );
 };
 
+const AdminRoute = ({ children }) => {
+    const token = localStorage.getItem("token");
+    const rawUser = localStorage.getItem("user");
+    const user = rawUser ? JSON.parse(rawUser) : null;
+
+    if (!token) {
+        return <Navigate to="/login" replace />;
+    }
+
+    if (!user || user.role !== "admin") {
+        return <Navigate to="/dashboard" replace />;
+    }
+
+    return (
+        <>
+            <Navbar />
+            {children}
+        </>
+    );
+};
+
 function App() {
     return (
         <BrowserRouter>
@@ -51,20 +72,21 @@ function App() {
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                 <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
                 <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-                <Route path="/feesmanagement" element={<ProtectedRoute><FeesManagement /></ProtectedRoute>} />
-                <Route path="/placement" element={<ProtectedRoute><Placement /></ProtectedRoute>} />
                 <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
                 <Route path="/ai-assistant" element={<ProtectedRoute><AIAssistant /></ProtectedRoute>} />
-                <Route path="/id-card" element={<ProtectedRoute><IDCard /></ProtectedRoute>} />
                 <Route path="/timetable" element={<ProtectedRoute><Timetable /></ProtectedRoute>} />
                 <Route path="/activity-logs" element={<ProtectedRoute><ActivityLogs /></ProtectedRoute>} />
-                <Route path="/admin-panel" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
-                <Route path="/students" element={<ProtectedRoute><StudentList /></ProtectedRoute>} />
-                <Route path="/add-student" element={<ProtectedRoute><AddStudent /></ProtectedRoute>} />
-                <Route path="/attendance" element={<ProtectedRoute><Attendance /></ProtectedRoute>} />
-                <Route path="/results" element={<ProtectedRoute><Results /></ProtectedRoute>} />
                 <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+
+                <Route path="/feesmanagement" element={<AdminRoute><FeesManagement /></AdminRoute>} />
+                <Route path="/placement" element={<AdminRoute><Placement /></AdminRoute>} />
+                <Route path="/id-card" element={<AdminRoute><IDCard /></AdminRoute>} />
+                <Route path="/attendance" element={<AdminRoute><Attendance /></AdminRoute>} />
+                <Route path="/results" element={<AdminRoute><Results /></AdminRoute>} />
+                <Route path="/admin-panel" element={<AdminRoute><AdminPanel /></AdminRoute>} />
+                <Route path="/students" element={<AdminRoute><StudentList /></AdminRoute>} />
+                <Route path="/add-student" element={<AdminRoute><AddStudent /></AdminRoute>} />
             </Routes>
         </BrowserRouter>
     );
