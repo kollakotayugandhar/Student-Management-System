@@ -1,22 +1,8 @@
-import { useState } from "react";
-
-const initialProfile = {
-    name: "Yugandhar",
-    email: "yugandhar@gmail.com",
-    phone: "9876543210",
-    course: "MCA",
-    year: "1st Year",
-    rollNumber: "MCA101",
-    branch: "Computer Science",
-    hostel: "Block C",
-    attendance: 92,
-    cgpa: 8.7,
-    feesStatus: "Paid",
-    photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80",
-};
+import { useEffect, useState } from "react";
+import api from "../api/axios";
 
 function Profile() {
-    const [profile, setProfile] = useState(initialProfile);
+    const [profile, setProfile] = useState(null);
     const [editMode, setEditMode] = useState(false);
 
     const handleChange = (e) => {
@@ -28,10 +14,69 @@ function Profile() {
         setEditMode((prev) => !prev);
     };
 
-    const saveProfile = (e) => {
+    const saveProfile = async (e) => {
         e.preventDefault();
+        // Only allow save for admin for now — students cannot change DB-backed student record here
         setEditMode(false);
     };
+
+    useEffect(() => {
+        const loadProfile = async () => {
+            try {
+                const raw = localStorage.getItem("user");
+                const user = raw ? JSON.parse(raw) : null;
+
+                if (!user) return;
+
+                // Try to find a student record by name
+                const nameQuery = encodeURIComponent(user.name || user.email || "");
+                if (!nameQuery) return;
+
+                const res = await api.get(`/students?name=${nameQuery}`);
+                if (res.data && res.data.length > 0) {
+                    const s = res.data[0];
+                    setProfile({
+                        name: s.name,
+                        email: s.email || user.email || "",
+                        phone: s.phone || "",
+                        course: s.course || "",
+                        year: s.year ? `${s.year}th Year` : "",
+                        rollNumber: s.rollNumber || "",
+                        branch: s.branch || "",
+                        hostel: s.hostel || "",
+                        attendance: s.attendance || 0,
+                        cgpa: s.cgpa || 0,
+                        feesTotal: s.feesTotal || 0,
+                        feesPaid: s.feesPaid || 0,
+                        feesStatus: (s.feesTotal || 0) > 0 && (s.feesPaid || 0) >= (s.feesTotal || 0) ? "Paid" : "Pending",
+                        photo: s.photo || user.photo || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80",
+                    });
+                } else {
+                    // Fallback to user info
+                    setProfile({
+                        name: user.name || "Student",
+                        email: user.email || "",
+                        phone: "",
+                        course: "",
+                        year: "",
+                        rollNumber: "",
+                        branch: "",
+                        hostel: "",
+                        attendance: 0,
+                        cgpa: 0,
+                        feesTotal: 0,
+                        feesPaid: 0,
+                        feesStatus: "Pending",
+                        photo: user.photo || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80",
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        loadProfile();
+    }, []);
 
     return (
         <div className="min-h-screen bg-slate-950 text-white px-6 py-10">
