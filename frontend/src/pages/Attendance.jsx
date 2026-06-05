@@ -108,11 +108,24 @@ return (
             Attendance System
         </h1>
 
+        {isAdmin ? (
+            <div className="mb-6 bg-cyan-500/10 border border-cyan-500/20 p-4 rounded-lg">
+                <p className="text-sm text-cyan-300">Admin Mode: You can mark attendance for all students.</p>
+            </div>
+        ) : (
+            <div className="mb-6 bg-blue-500/10 border border-blue-500/20 p-4 rounded-lg">
+                <p className="text-sm text-blue-300">Student Mode: You can view attendance records. Marking is restricted to admins.</p>
+            </div>
+        )}
+
         {/* Student List */}
 
         <div className="grid gap-4">
 
-            {students.map((student) => (
+            {(isAdmin ? students : students.filter(s => 
+                user && ((s.name && user.name && s.name.toLowerCase() === user.name.toLowerCase()) || 
+                (s.rollNumber && user.rollNumber && s.rollNumber === user.rollNumber))
+            )).map((student) => (
 
                 <div
                     key={student._id}
@@ -132,7 +145,7 @@ return (
                     </div>
 
                     <div className="flex gap-3">
-                            {(isAdmin || ((user && student.name && user.name && student.name.toLowerCase() === user.name.toLowerCase()) || (user && student.rollNumber && user.rollNumber && student.rollNumber === user.rollNumber))) ? (
+                            {isAdmin ? (
                                 <>
                                     <button
                                         disabled={
@@ -175,7 +188,7 @@ return (
                                     </button>
                                 </>
                             ) : (
-                                <span className="text-xs uppercase tracking-[0.2em] text-slate-400">Admin only</span>
+                                <span className="text-xs uppercase tracking-[0.2em] text-slate-400">View Only</span>
                             )}
                     </div>
 
