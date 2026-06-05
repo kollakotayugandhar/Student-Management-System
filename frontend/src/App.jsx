@@ -1,5 +1,5 @@
 
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Landing from "./pages/Landing";
@@ -25,6 +25,7 @@ import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 
 const ProtectedRoute = ({ children }) => {
+    const location = useLocation();
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -32,14 +33,15 @@ const ProtectedRoute = ({ children }) => {
     }
 
     return (
-        <>
+        <div key={location.pathname}>
             <Navbar />
             {children}
-        </>
+        </div>
     );
 };
 
 const AdminRoute = ({ children }) => {
+    const location = useLocation();
     const token = localStorage.getItem("token");
     const rawUser = localStorage.getItem("user");
     const user = rawUser ? JSON.parse(rawUser) : null;
@@ -53,10 +55,10 @@ const AdminRoute = ({ children }) => {
     }
 
     return (
-        <>
+        <div key={location.pathname}>
             <Navbar />
             {children}
-        </>
+        </div>
     );
 };
 
