@@ -46,7 +46,24 @@ exports.login = async (req, res) => {
             });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        let isMatch = false;
+        const looksLikeHash = typeof user.password === 'string' && /^\$2[aby]\$\d{2}\$/.test(user.password);
+
+        if (looksLikeHash) {
+            isMatch = await bcrypt.compare(password, user.password);
+        } else {
+            if (password === user.password) {
+                isMatch = true;
+                const newHash = await bcrypt.hash(password, 10);
+                try {
+                    user.password = newHash;
+                    await user.save();
+                    console.log("Upgraded legacy plaintext password to bcrypt for user:", user.email);
+                } catch (upgradeError) {
+                    console.log("Failed to upgrade password hash:", upgradeError.message);
+                }
+            }
+        }
 
         if (!isMatch) {
             return res.status(400).json({
@@ -54,7 +71,6 @@ exports.login = async (req, res) => {
             });
         }
 
-        // 🔥 FIXED JWT (NO ENV REQUIRED)
         const jwtSecret = process.env.JWT_SECRET || "secretkey";
         const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: "7d" });
 

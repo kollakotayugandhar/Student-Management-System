@@ -20,7 +20,7 @@ function Register() {
             console.log("Attempting registration with:", { name, email, role });
             console.log("API Base URL:", api.defaults.baseURL);
 
-            const res = await api.post("/auth/register", {
+            const res = await api.post("/users/register", {
                 name,
                 email,
                 password,
