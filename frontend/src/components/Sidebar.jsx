@@ -53,42 +53,38 @@ function Sidebar() {
                     <FaTachometerAlt /> Dashboard
                 </Link>
 
-                {user?.role === "admin" && (
-                    <>
-                        <Link
-                            to="/students"
-                            className={`flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-medium transition ${
-                                isActive("/students")
-                                    ? "bg-cyan-500/10 text-cyan-200 shadow-inner"
-                                    : "text-slate-200 hover:bg-cyan-500/10 hover:text-cyan-100"
-                            }`}
-                        >
-                            <FaUserGraduate /> Students
-                        </Link>
+                <Link
+                    to="/students"
+                    className={`flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-medium transition ${
+                        isActive("/students")
+                            ? "bg-cyan-500/10 text-cyan-200 shadow-inner"
+                            : "text-slate-200 hover:bg-cyan-500/10 hover:text-cyan-100"
+                    }`}
+                >
+                    <FaUserGraduate /> Students
+                </Link>
 
-                        <Link
-                            to="/attendance"
-                            className={`flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-medium transition ${
-                                isActive("/attendance")
-                                    ? "bg-cyan-500/10 text-cyan-200 shadow-inner"
-                                    : "text-slate-200 hover:bg-cyan-500/10 hover:text-cyan-100"
-                            }`}
-                        >
-                            <FaClipboardList /> Attendance
-                        </Link>
+                <Link
+                    to="/attendance"
+                    className={`flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-medium transition ${
+                        isActive("/attendance")
+                            ? "bg-cyan-500/10 text-cyan-200 shadow-inner"
+                            : "text-slate-200 hover:bg-cyan-500/10 hover:text-cyan-100"
+                    }`}
+                >
+                    <FaClipboardList /> Attendance
+                </Link>
 
-                        <Link
-                            to="/results"
-                            className={`flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-medium transition ${
-                                isActive("/results")
-                                    ? "bg-cyan-500/10 text-cyan-200 shadow-inner"
-                                    : "text-slate-200 hover:bg-cyan-500/10 hover:text-cyan-100"
-                            }`}
-                        >
-                            <FaChartBar /> Results
-                        </Link>
-                    </>
-                )}
+                <Link
+                    to="/results"
+                    className={`flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-medium transition ${
+                        isActive("/results")
+                            ? "bg-cyan-500/10 text-cyan-200 shadow-inner"
+                            : "text-slate-200 hover:bg-cyan-500/10 hover:text-cyan-100"
+                    }`}
+                >
+                    <FaChartBar /> Results
+                </Link>
 
                 <button
                     onClick={logout}

@@ -68,28 +68,24 @@ export default function Navbar() {
                         >
                             Dashboard
                         </Link>
-                        {isAdmin && (
-                            <>
-                                <Link
-                                    to="/students"
-                                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isActive("/students") ? "bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20" : "text-slate-200 hover:bg-slate-800 hover:text-white"}`}
-                                >
-                                    Students
-                                </Link>
-                                <Link
-                                    to="/attendance"
-                                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isActive("/attendance") ? "bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20" : "text-slate-200 hover:bg-slate-800 hover:text-white"}`}
-                                >
-                                    Attendance
-                                </Link>
-                                <Link
-                                    to="/results"
-                                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isActive("/results") ? "bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20" : "text-slate-200 hover:bg-slate-800 hover:text-white"}`}
-                                >
-                                    Results
-                                </Link>
-                            </>
-                        )}
+                        <Link
+                            to="/students"
+                            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isActive("/students") ? "bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20" : "text-slate-200 hover:bg-slate-800 hover:text-white"}`}
+                        >
+                            Students
+                        </Link>
+                        <Link
+                            to="/attendance"
+                            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isActive("/attendance") ? "bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20" : "text-slate-200 hover:bg-slate-800 hover:text-white"}`}
+                        >
+                            Attendance
+                        </Link>
+                        <Link
+                            to="/results"
+                            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isActive("/results") ? "bg-cyan-500 text-slate-950 shadow-lg shadow-cyan-500/20" : "text-slate-200 hover:bg-slate-800 hover:text-white"}`}
+                        >
+                            Results
+                        </Link>
                     </div>
 
                     <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-slate-300 shadow-inner shadow-slate-950/10 transition duration-300 hover:bg-slate-900/80">

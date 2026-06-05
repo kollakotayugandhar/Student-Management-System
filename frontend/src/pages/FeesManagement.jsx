@@ -7,9 +7,18 @@ function FeesManagement() {
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [paymentAmount, setPaymentAmount] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState(null);
+    const isAdmin = user?.role === "admin";
 
     useEffect(() => {
         fetchStudents();
+
+        try {
+            const raw = localStorage.getItem("user");
+            setUser(raw ? JSON.parse(raw) : null);
+        } catch {
+            setUser(null);
+        }
     }, []);
 
     const fetchStudents = async () => {
@@ -161,13 +170,17 @@ function FeesManagement() {
                                                 </span>
                                             </td>
                                             <td className="px-4 py-4">
-                                                <button
-                                                    onClick={() => openPaymentModal(student)}
-                                                    className="inline-flex items-center gap-2 rounded-2xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
-                                                >
-                                                    <FaPen />
-                                                    Record
-                                                </button>
+                                                {isAdmin ? (
+                                                    <button
+                                                        onClick={() => openPaymentModal(student)}
+                                                        className="inline-flex items-center gap-2 rounded-2xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+                                                    >
+                                                        <FaPen />
+                                                        Record
+                                                    </button>
+                                                ) : (
+                                                    <span className="text-xs uppercase tracking-[0.2em] text-slate-400">Admin only</span>
+                                                )}
                                             </td>
                                         </tr>
                                     );

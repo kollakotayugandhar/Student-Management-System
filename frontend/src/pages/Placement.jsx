@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaBriefcase, FaGraduationCap, FaSearch, FaChartLine } from "react-icons/fa";
 
 const initialPlacements = [
@@ -43,6 +43,8 @@ function Placement() {
     });
     const [search, setSearch] = useState("");
     const [filterStatus, setFilterStatus] = useState("");
+    const [user, setUser] = useState(null);
+    const isAdmin = user?.role === "admin";
 
     const filteredPlacements = useMemo(() => {
         return placements.filter((placement) => {
@@ -66,6 +68,15 @@ function Placement() {
             : 0;
         return { placedCount, pendingCount, averagePackage, highestPackage };
     }, [placements]);
+
+    useEffect(() => {
+        try {
+            const raw = localStorage.getItem("user");
+            setUser(raw ? JSON.parse(raw) : null);
+        } catch {
+            setUser(null);
+        }
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -191,65 +202,72 @@ function Placement() {
                         <h2 className="text-2xl font-semibold text-white">Add Placement</h2>
                         <p className="mt-2 text-slate-400">Register a new student placement record for the next drive.</p>
 
-                        <form onSubmit={handleAddPlacement} className="mt-6 space-y-4">
-                            <input
-                                name="student"
-                                value={formData.student}
-                                onChange={handleChange}
-                                placeholder="Student name"
-                                className="w-full rounded-3xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none"
-                                required
-                            />
-                            <input
-                                name="company"
-                                value={formData.company}
-                                onChange={handleChange}
-                                placeholder="Company"
-                                className="w-full rounded-3xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none"
-                                required
-                            />
-                            <input
-                                name="role"
-                                value={formData.role}
-                                onChange={handleChange}
-                                placeholder="Role"
-                                className="w-full rounded-3xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none"
-                            />
-                            <input
-                                name="package"
-                                type="number"
-                                step="0.1"
-                                value={formData.package}
-                                onChange={handleChange}
-                                placeholder="Package (LPA)"
-                                className="w-full rounded-3xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none"
-                                required
-                            />
-                            <input
-                                name="date"
-                                type="date"
-                                value={formData.date}
-                                onChange={handleChange}
-                                className="w-full rounded-3xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none"
-                                required
-                            />
-                            <select
-                                name="status"
-                                value={formData.status}
-                                onChange={handleChange}
-                                className="w-full rounded-3xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none"
-                            >
-                                <option value="Placed">Placed</option>
-                                <option value="Offer Received">Offer Received</option>
-                                <option value="Interview Scheduled">Interview Scheduled</option>
-                            </select>
-                            <button
-                                type="submit"
-                                className="w-full rounded-3xl bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
-                            >
-                                Add Placement
-                            </button>
-                        </form>
+                        {isAdmin ? (
+                            <form onSubmit={handleAddPlacement} className="mt-6 space-y-4">
+                                <input
+                                    name="student"
+                                    value={formData.student}
+                                    onChange={handleChange}
+                                    placeholder="Student name"
+                                    className="w-full rounded-3xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none"
+                                    required
+                                />
+                                <input
+                                    name="company"
+                                    value={formData.company}
+                                    onChange={handleChange}
+                                    placeholder="Company"
+                                    className="w-full rounded-3xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none"
+                                    required
+                                />
+                                <input
+                                    name="role"
+                                    value={formData.role}
+                                    onChange={handleChange}
+                                    placeholder="Role"
+                                    className="w-full rounded-3xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none"
+                                />
+                                <input
+                                    name="package"
+                                    type="number"
+                                    step="0.1"
+                                    value={formData.package}
+                                    onChange={handleChange}
+                                    placeholder="Package (LPA)"
+                                    className="w-full rounded-3xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none"
+                                    required
+                                />
+                                <input
+                                    name="date"
+                                    type="date"
+                                    value={formData.date}
+                                    onChange={handleChange}
+                                    className="w-full rounded-3xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none"
+                                    required
+                                />
+                                <select
+                                    name="status"
+                                    value={formData.status}
+                                    onChange={handleChange}
+                                    className="w-full rounded-3xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-white outline-none"
+                                >
+                                    <option value="Placed">Placed</option>
+                                    <option value="Offer Received">Offer Received</option>
+                                    <option value="Interview Scheduled">Interview Scheduled</option>
+                                </select>
+                                <button
+                                    type="submit"
+                                    className="w-full rounded-3xl bg-cyan-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+                                >
+                                    Add Placement
+                                </button>
+                            </form>
+                        ) : (
+                            <div className="mt-6 rounded-3xl border border-amber-500/20 bg-amber-500/10 p-6 text-amber-200">
+                                <p className="font-semibold">Admin only</p>
+                                <p className="mt-2 text-sm text-amber-100">You can view placement records, but only admin users can add new placement entries.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

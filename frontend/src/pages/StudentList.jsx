@@ -16,6 +16,7 @@ function StudentList() {
 
 const [students, setStudents] = useState([]);
 const [filteredStudents, setFilteredStudents] = useState([]);
+const [user, setUser] = useState(null);
 
 const [searchName, setSearchName] = useState("");
 const [searchRoll, setSearchRoll] = useState("");
@@ -23,6 +24,8 @@ const [courseFilter, setCourseFilter] = useState("");
 
 const [isModalOpen, setIsModalOpen] = useState(false);
 const [selectedStudent, setSelectedStudent] = useState(null);
+
+const isAdmin = user?.role === "admin";
 
 const [formData, setFormData] = useState({
     name: "",
@@ -33,6 +36,13 @@ const [formData, setFormData] = useState({
 
 useEffect(() => {
     fetchStudents();
+
+    try {
+        const raw = localStorage.getItem("user");
+        setUser(raw ? JSON.parse(raw) : null);
+    } catch {
+        setUser(null);
+    }
 }, []);
 
 const fetchStudents = async () => {
@@ -250,18 +260,24 @@ return (
                                 </td>
                                 <td className="px-5 py-4">{student.year || "-"}</td>
                                 <td className="px-5 py-4 text-right">
-                                    <button
-                                        onClick={() => openEditModal(student)}
-                                        className="inline-flex items-center justify-center rounded-2xl bg-amber-500 px-3 py-2 text-slate-950 transition hover:bg-amber-400"
-                                    >
-                                        <FaEdit />
-                                    </button>
-                                    <button
-                                        onClick={() => deleteStudent(student._id)}
-                                        className="ml-2 inline-flex items-center justify-center rounded-2xl bg-rose-500 px-3 py-2 text-slate-950 transition hover:bg-rose-400"
-                                    >
-                                        <FaTrash />
-                                    </button>
+                                    {isAdmin ? (
+                                        <>
+                                            <button
+                                                onClick={() => openEditModal(student)}
+                                                className="inline-flex items-center justify-center rounded-2xl bg-amber-500 px-3 py-2 text-slate-950 transition hover:bg-amber-400"
+                                            >
+                                                <FaEdit />
+                                            </button>
+                                            <button
+                                                onClick={() => deleteStudent(student._id)}
+                                                className="ml-2 inline-flex items-center justify-center rounded-2xl bg-rose-500 px-3 py-2 text-slate-950 transition hover:bg-rose-400"
+                                            >
+                                                <FaTrash />
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <span className="text-xs uppercase tracking-[0.2em] text-slate-400">View only</span>
+                                    )}
                                 </td>
                             </tr>
                         ))}

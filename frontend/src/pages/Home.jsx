@@ -48,15 +48,13 @@ function Home() {
             title: "Fees",
             icon: <FaMoneyBill size={30} />,
             path: "/feesmanagement",
-            description: "Track fees, dues, and payments.",
-            adminOnly: true
+            description: "Track fees, dues, and payments."
         },
         {
             title: "Placement",
             icon: <FaBriefcase size={30} />,
             path: "/placement",
-            description: "View placement drives and offers.",
-            adminOnly: true
+            description: "View placement drives and offers."
         },
         {
             title: "Events",
@@ -74,8 +72,7 @@ function Home() {
             title: "ID Card",
             icon: <FaIdCard size={30} />,
             path: "/id-card",
-            description: "Generate student ID cards.",
-            adminOnly: true
+            description: "Generate student ID cards."
         },
         {
             title: "Timetable",
