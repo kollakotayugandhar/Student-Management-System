@@ -27,6 +27,8 @@ app.use("/api/results", require("./routes/resultRoutes"));
 app.use("/api/attendance",attendanceRoutes);
 app.use("/api/results",resultRoutes);
 app.use("/api/users", userRoutes);
+// AI routes (fake Gemini)
+app.use("/api/ai", require("./routes/aiRoutes"));
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log("MongoDB Connected"))

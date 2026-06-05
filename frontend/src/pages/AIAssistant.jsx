@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaPaperPlane, FaRobot } from "react-icons/fa";
+import api from "../api/axios";
 
 const initialMessages = [
     {
@@ -35,7 +36,7 @@ function AIAssistant() {
         return "I can help you with student management tasks like attendance, results, fees, and events. Try asking a more specific question.";
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const text = query.trim();
         if (!text) return;
@@ -50,15 +51,28 @@ function AIAssistant() {
         setQuery("");
         setLoading(true);
 
-        setTimeout(() => {
+        try {
+            const res = await api.post("/ai/gemini", { prompt: text });
+            const assistantText = res.data?.output || "No response from AI.";
+
             const assistantMessage = {
                 id: Date.now() + 1,
                 role: "assistant",
-                content: getMockResponse(text)
+                content: assistantText
+            };
+
+            setMessages((prev) => [...prev, assistantMessage]);
+        } catch (err) {
+            console.error(err);
+            const assistantMessage = {
+                id: Date.now() + 1,
+                role: "assistant",
+                content: "Error contacting AI service. Using local fallback: " + getMockResponse(text)
             };
             setMessages((prev) => [...prev, assistantMessage]);
+        } finally {
             setLoading(false);
-        }, 700);
+        }
     };
 
     return (
